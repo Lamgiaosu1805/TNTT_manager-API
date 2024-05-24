@@ -4,6 +4,7 @@ const port = 3002
 const route = require('./src/routes')
 const morgan = require('morgan')
 const db = require('./src/config/connectdb')
+const Migrate = require('./src/utils/MigateDB')
 //load env file
 require('dotenv').config();
 
@@ -16,6 +17,9 @@ app.use(express.urlencoded({
 
 //connectdb
 db.connect()
+
+//Migrate db
+// Migrate();
 
 //routing
 route(app);
