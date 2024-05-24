@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const User = new Schema({
+const XuDoan = new Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true},
     roleId: {type: Number, required: true},//Id = 0, Admin tổng, 1, Admin hỗ trợ hệ thống,. 2, Admin Xứ đoàn ... 3, Account
@@ -13,4 +13,4 @@ const User = new Schema({
     timestamps: true
 })
 
-module.exports = mongoose.model('user', User)
+module.exports = mongoose.model('xuDoan', XuDoan)

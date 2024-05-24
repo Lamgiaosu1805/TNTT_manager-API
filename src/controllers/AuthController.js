@@ -30,9 +30,9 @@ const signUp = async (body, role, res) => {
             const newUser = new UserModel({
                 username: body.username,
                 password: hashed,
-                role: role,
+                roleId: role,
                 fullName: body.fullname,
-                idXuDoanQly: body.idXuDoanQly
+                idXuDoan: body.idXuDoan
             });
             await newUser.save()
                 .then(resp => {
