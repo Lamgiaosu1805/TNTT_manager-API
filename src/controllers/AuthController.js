@@ -6,7 +6,7 @@ const genAccessToken = (user) => {
     return jwt.sign({
         id: user._id,
         username: user.username,
-        role: user.role,
+        roleId: user.roleId,
     },
         process.env.SECRET_KEY,
         {
@@ -63,7 +63,7 @@ const signUp = async (body, role, res) => {
 const AuthController = {
     signUp: (req, res, next) => {
         const body = req.body
-        signUp(body, 3, res)
+        signUp(body, 4, res)
     },
     
     createAdmin: async (req, res, next) => {

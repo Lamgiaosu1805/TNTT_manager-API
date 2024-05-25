@@ -29,7 +29,7 @@ const auth = {
 
     verifyTokenForAdmin: (req, res, next) => {
         auth.verifyToken(req, res, () => {
-            if(req.user.role <= 1) {
+            if(req.user.roleId <= 1) {
                 next();
             }
             else {
@@ -40,7 +40,7 @@ const auth = {
 
     verifyTokenForAdminXuDoan: (req, res, next) => {
         auth.verifyToken(req, res, () => {
-            if(req.user.role <= 2 ) {
+            if(req.user.roleId <= 2 ) {
                 next();
             }
             else {
