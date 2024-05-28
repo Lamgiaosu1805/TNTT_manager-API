@@ -66,10 +66,10 @@ const AuthController = {
         signUp(body, 4, res)
     },
     
-    createAdmin: async (req, res, next) => {
-        const body = req.body
-        signUp(body, 2, res)
-    },
+    // createAdmin: async (req, res, next) => {
+    //     const body = req.body
+    //     signUp(body, 2, res)
+    // },
 
     signIn: async(req, res, next) => {
         const {body} = req;
