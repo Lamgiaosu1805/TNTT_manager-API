@@ -11,7 +11,9 @@ const XuDoanController = {
         try {
             const newXuDoan =  new XuDoanModel({
                 tenXuDoan: body.tenXuDoan,
-                tenGiaoXu: body.tenGiaoXu
+                tenGiaoXu: body.tenGiaoXu,
+                avtUrl: body.avtUrl,
+                ngayThanhLap: body.ngayThanhLap
             })
             const password = await generatePassword()
             const idAccount = await UserModel.countDocuments()
