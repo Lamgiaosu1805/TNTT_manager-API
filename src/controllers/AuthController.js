@@ -95,7 +95,7 @@ const AuthController = {
                 if(validPassWord) {
                     const accessToken = genAccessToken(user);
                     const {password, ...others} = user._doc;
-                    res.json({...others, accessToken})
+                    res.json({status: true, result: {...others, accessToken}})
                 }
             }
         } catch (error) {
