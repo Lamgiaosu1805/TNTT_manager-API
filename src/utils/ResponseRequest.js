@@ -1,7 +1,18 @@
+const HandleErrorCode = require("./handleErrorCode")
+
 const SuccessResponse = (data) => {
     return {
         status: true,
         result: data
     }
 }
-module.exports = {SuccessResponse}
+
+const FailureResponse = (errorCode, error) => {
+    return {
+        status: false,
+        errorCode: errorCode,
+        message: HandleErrorCode(errorCode),
+        error: error?.toString()
+    }
+}
+module.exports = {SuccessResponse, FailureResponse}

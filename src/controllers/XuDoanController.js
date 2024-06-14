@@ -2,7 +2,7 @@ const UserModel = require("../models/UserModel")
 const XuDoanModel = require("../models/XuDoanModel")
 const generatePassword = require("../utils/generatePassword")
 const mongoose = require('mongoose')
-const { SuccessResponse } = require("../utils/ResponseRequest")
+const { SuccessResponse, FailureResponse } = require("../utils/ResponseRequest")
 
 const XuDoanController = {
     createXuDoan: async (req, res, next) => {
@@ -37,7 +37,7 @@ const XuDoanController = {
             await session.abortTransaction();
             session.endSession();
             console.log(error)
-            res.send(error)
+            res.json(FailureResponse("11", error))
         }
     }
 }

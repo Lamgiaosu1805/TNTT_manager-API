@@ -1,6 +1,6 @@
 const UserModel = require("../models/UserModel")
 const bcrypt = require('bcrypt');
-const { SuccessResponse } = require("../utils/ResponseRequest");
+const { SuccessResponse, FailureResponse } = require("../utils/ResponseRequest");
 
 const UserController = {
     getUserInfo: async (req, res, next) => {
@@ -11,10 +11,11 @@ const UserController = {
                 res.json(SuccessResponse({...others}))
             }
             else {
-                console.log("user không còn tồn tại")
+                res.json(FailureResponse("03"))
             }
         } catch (error) {
             console.log(error)
+            res.json(FailureResponse("04", error))
         }
     },
 
@@ -24,7 +25,7 @@ const UserController = {
             const user = await UserModel.findById(req.user.id)
             if(user) {
                 if(body.oldPassword === body.newPassword) {
-                    res.send("Mật khẩu cũ không được trùng mật khẩu mới")
+                    res.json(FailureResponse("08"))
                 }
                 else {
                     const validPassWord = await bcrypt.compare(
@@ -40,14 +41,14 @@ const UserController = {
                         }))
                     }
                     else{
-                        res.send("Mật khẩu hiện tại không đúng")
+                        res.json(FailureResponse("09"))
                     }
                 }
             }else {
-                res.send("user không còn tồn tại")
+                res.json(FailureResponse("03"))
             }
         } catch (error) {
-            res.send(error)
+            res.json(FailureResponse("10", error))
         }
     }
 

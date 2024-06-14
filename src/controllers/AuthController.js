@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
-const { SuccessResponse } = require('../utils/ResponseRequest');
+const { SuccessResponse, FailureResponse } = require('../utils/ResponseRequest');
 
 const genAccessToken = (user) => {
     return jwt.sign({
@@ -20,10 +20,7 @@ const signUp = async (body, role, res) => {
     try {
         const user = await UserModel.findOne({username: body.username})
         if(user) {
-            res.json({
-                status: false,
-                message: 'username đã tồn tại'
-            })
+            res.json(FailureResponse("01"))
         }
         else {
             const salt = await bcrypt.genSalt(10);
@@ -41,18 +38,12 @@ const signUp = async (body, role, res) => {
                 })
                 .catch(error => {
                     console.log(error)
-                    res.json({
-                        status: false,
-                        message: error,
-                    })
+                    res.json(FailureResponse("02", error))
                 })
         }
     } catch (error) {
         console.log(error)
-        res.json({
-            status: false,
-            message: error,
-        })
+        res.json(FailureResponse("02", error))
     }
 }
 
@@ -73,10 +64,7 @@ const AuthController = {
         try {
             const user = await UserModel.findOne({username: body.username})
             if(!user) {
-                res.json({
-                    status: false,
-                    message: "username không tồn tại"
-                })
+                res.json(FailureResponse("05"))
             }
             else {
                 const validPassWord = await bcrypt.compare(
@@ -84,10 +72,7 @@ const AuthController = {
                     user.password
                 );
                 if(!validPassWord) {
-                    res.json({
-                        status: false,
-                        message: "Wrong Password"
-                    })
+                    res.json(FailureResponse("07"))
                 }
                 if(validPassWord) {
                     const accessToken = genAccessToken(user);
@@ -97,11 +82,7 @@ const AuthController = {
             }
         } catch (error) {
             console.log(error)
-            res.json({
-                status: false,
-                message: "Đã có lỗi trong quá trình đăng nhập",
-                error: error
-            })
+            res.json(FailureResponse("06", error))
         }
     },
 }
