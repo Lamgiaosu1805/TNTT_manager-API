@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
+const { SuccessResponse } = require('../utils/ResponseRequest');
 
 const genAccessToken = (user) => {
     return jwt.sign({
@@ -36,11 +37,7 @@ const signUp = async (body, role, res) => {
             });
             await newUser.save()
                 .then(resp => {
-                    res.json({
-                        status: true,
-                        message: "Đăng ký thành công",
-                        data: {}
-                    })
+                    res.json(SuccessResponse())
                 })
                 .catch(error => {
                     console.log(error)
@@ -95,7 +92,7 @@ const AuthController = {
                 if(validPassWord) {
                     const accessToken = genAccessToken(user);
                     const {password, ...others} = user._doc;
-                    res.json({status: true, result: {...others, accessToken}})
+                    res.json(SuccessResponse({...others, accessToken}))
                 }
             }
         } catch (error) {

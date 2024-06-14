@@ -2,6 +2,7 @@ const UserModel = require("../models/UserModel")
 const XuDoanModel = require("../models/XuDoanModel")
 const generatePassword = require("../utils/generatePassword")
 const mongoose = require('mongoose')
+const { SuccessResponse } = require("../utils/ResponseRequest")
 
 const XuDoanController = {
     createXuDoan: async (req, res, next) => {
@@ -28,13 +29,10 @@ const XuDoanController = {
             const dataAdminXuDoanNew = await newAdminXuDoan.save({session})
             await session.commitTransaction();
             session.endSession();
-            res.json({
-                status: true,
-                data: {
-                    username: dataAdminXuDoanNew.username,
-                    password: password.realPassword
-                }
-            })
+            res.json(SuccessResponse({
+                username: dataAdminXuDoanNew.username,
+                password: password.realPassword
+            }))
         } catch (error) {
             await session.abortTransaction();
             session.endSession();
