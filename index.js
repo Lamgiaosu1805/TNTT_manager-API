@@ -25,5 +25,5 @@ db.connect()
 route(app);
 
 app.listen(port, () => {
-  console.log(`App server listening on port ${port}`)
+  console.log(`App service listening on port ${port}`)
 })
