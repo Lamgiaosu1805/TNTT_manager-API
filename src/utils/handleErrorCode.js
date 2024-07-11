@@ -9,7 +9,7 @@ const HandleErrorCode = (errorCode) => {
         case "04":
             return "Error:04, Có lỗi trong quá trình lấy thông tin user";
         case "05":
-            return "Error:05, username không tồn tại";
+            return "Error:05, Tên tài khoản không tồn tại";
         case "06":
             return "Error:06, Có lỗi khi login";
         case "07":
@@ -24,17 +24,21 @@ const HandleErrorCode = (errorCode) => {
             return "Error:11, Có lỗi khi tạo xứ đoàn và account admin xứ đoàn";
         case "12":
             return "Error:12, Có lỗi khi tạo Ngành";
+        case "13":
+            return "Error:13, Not Authenticated";
+        case "14":
+            return "Error:14, Token không hợp lệ";
     
         default:
             return "Error: " + errorCode + ", Lỗi không xác định";
     }
 }
 
-//Auth: "01", "02", "05", "06", "07", "08", "09"
+//Auth: "01", "02", "05", "06", "07", "08", "09", "13", "14"
 
 //User: "03", "04", "10"
 
 //Xứ Đoàn: "11"
 
-//Ngành: 
+//Ngành: "12"
 module.exports = HandleErrorCode

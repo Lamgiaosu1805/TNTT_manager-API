@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const UserModel = require('../models/UserModel');
+const { FailureResponse } = require('../utils/ResponseRequest');
 
 const auth = {
     //verify
@@ -6,24 +8,31 @@ const auth = {
         const token = req.headers.authorization;
         if(token) {
             const accessToken = token.split(" ")[1];
-            jwt.verify(accessToken, process.env.SECRET_KEY, (err, user) => {
+            jwt.verify(accessToken, process.env.SECRET_KEY, async (err, user) => {
                 if(err) {
-                    res.json({
-                        code: 403,
-                        message: "Token is not valid"
-                    });
+                    res.json(FailureResponse('14'))
                 }
                 else {
                     req.user = user;
-                    next();
+                    try {
+                        const validatedUser = await UserModel.findById(user.id)
+                        if(validatedUser?.isActive) {
+                            next();
+                        }
+                        else {
+                            res.json(FailureResponse("03"))
+                        }
+                    } catch (error) {
+                        console.log(error)
+                        res.json(FailureResponse("04"))
+                    }
+                    
                 }
             })
         }
         else {
-            res.json({
-                code: 401,
-                message: "Not Authenticated"
-            })
+            res.json(FailureResponse('13'))
+            console.log("Not Authenticated")
         }
     },
 
@@ -33,7 +42,7 @@ const auth = {
                 next();
             }
             else {
-                res.status(403).json("Not Allowed")
+                res.json(FailureResponse('14'))
             }
         })
     },
