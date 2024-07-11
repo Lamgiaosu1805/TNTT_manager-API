@@ -22,6 +22,8 @@ const HandleErrorCode = (errorCode) => {
             return "Error:10, Có lỗi trong lúc đổi mật khẩu";
         case "11":
             return "Error:11, Có lỗi khi tạo xứ đoàn và account admin xứ đoàn";
+        case "12":
+            return "Error:12, Có lỗi khi tạo Ngành";
     
         default:
             return "Error: " + errorCode + ", Lỗi không xác định";
@@ -33,4 +35,6 @@ const HandleErrorCode = (errorCode) => {
 //User: "03", "04", "10"
 
 //Xứ Đoàn: "11"
+
+//Ngành: 
 module.exports = HandleErrorCode
