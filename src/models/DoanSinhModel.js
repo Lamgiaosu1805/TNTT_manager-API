@@ -6,7 +6,9 @@ const DoanSinh = new Schema({
     idAccount: { type: String, required: true },
     idXuDoan: { type: String, required: true },
     idClass: {type: String, default: ''},
-    className: {type: String, default: ''}
+    className: {type: String, default: ''},
+    dob: {type: Date, default: ''},
+    isDelete: {type: Boolean, default: false},
 }, {
     timestamps: true
 })
