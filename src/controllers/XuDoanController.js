@@ -5,6 +5,28 @@ const mongoose = require('mongoose')
 const { SuccessResponse, FailureResponse } = require("../utils/ResponseRequest")
 const ExcelJS = require('exceljs');
 const NganhModel = require("../models/NganhModel")
+const ClassModel = require("../models/ClassModel")
+const DoanSinhModel = require("../models/DoanSinhModel")
+
+const generateExcelFile = async (data, idXuDoan) => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sheet 1');
+
+    // Tạo header (tên cột)
+    const headers = Object.keys(data[0]);
+    worksheet.addRow(headers);
+
+    // Thêm dữ liệu
+    data.forEach(row => {
+        const values = headers.map(header => row[header]);
+        worksheet.addRow(values);
+    });
+
+    // Lưu file Excel
+    const filename = `${idXuDoan}.xlsx`;
+    await workbook.xlsx.writeFile(filename);
+    console.log(`File Excel đã được tạo: ${filename}`);
+}
 
 const XuDoanController = {
     createXuDoan: async (req, res, next) => {
@@ -68,6 +90,7 @@ const XuDoanController = {
                         data.push(rowData);
                     }
                 });
+                //---- Tạo lớp
                 const listClassBefore = data.map(ele => {
                     return {
                         className: ele.Lop,
@@ -83,17 +106,65 @@ const XuDoanController = {
                         idNganh: listNganh.find(e=> e.tenNganh == ele.tenNganh).id
                     }
                 });
-                // console.log(listClassBeforeData)
+                const listClassAfter = await ClassModel.insertMany(listClassBeforeData, {session})
+
+                // console.log(listClassBeforeData)---
+
+                // -- Tạo account
+                const listUserBefore = data.map(ele => {
+                    return {
+                        username: ele.SDT,
+                        fullname: ele.HoTenPhuHuynh
+                    }
+                })
+                const listUserBeforeUniq = Array.from(new Set(listUserBefore.map(JSON.stringify)), JSON.parse);
+                const listAccount = await Promise.all(listUserBeforeUniq.map(async (ele) => {
+                    const password = await generatePassword()
+                    return {
+                        idXuDoan: user.idXuDoan,
+                        username: ele.username,
+                        fullName: ele.fullname,
+                        roleId: 4,
+                        password: password.hashedPassword,
+                        realPassword: password.realPassword
+                    }
+                })) 
+                await UserModel.insertMany(listAccount, {session})
+                // console.log(listAccount)------
+
+                //----- Tạo Đoàn Sinh
+                const listDoanSinh = data.map(ele => {
+                    return {
+                        fullName: ele.HoTenDoanSinh,
+                        sdtPhuHuynh: ele.SDT,
+                        idXuDoan: user.idXuDoan,
+                        idClass: listClassAfter.find(e => e.className == ele.Lop).id,
+                        className: ele.Lop,
+                        dob: ele.NgaySinh,
+                    }
+                })
+                const listDoanSinhData = await DoanSinhModel.insertMany(listDoanSinh, {session})
+                const responseData = listDoanSinhData.map(ele => {
+                    return {
+                        fullName: ele.fullName,
+                        ngaySinh: ele.dob,
+                        tenPhuHuynh: listAccount.find(e => e.username == ele.sdtPhuHuynh).fullName,
+                        username: ele.sdtPhuHuynh,
+                        password: listAccount.find(e => e.username == ele.sdtPhuHuynh).realPassword,
+                    }
+                })
+                await generateExcelFile(responseData, user.idXuDoan)
+
                 await session.commitTransaction();
                 session.endSession();
-                res.json({
+                res.json(SuccessResponse({
                     total: data.length,
-                    data: data
-                });
+                    data: responseData
+                }));
             } catch (error) {
                 await session.abortTransaction();
                 session.endSession();
-                console.log(error)
+                res.json(FailureResponse("15", error))
             }
         }
     }
