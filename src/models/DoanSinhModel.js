@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const DoanSinh = new Schema({
     fullName: { type: String, required: true },
-    idAccount: { type: String, required: true },
+    sdtPhuHuynh: { type: String, required: true },
     idXuDoan: { type: String, required: true },
     idClass: {type: String, default: ''},
     className: {type: String, default: ''},

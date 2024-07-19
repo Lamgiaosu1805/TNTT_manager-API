@@ -28,6 +28,8 @@ const HandleErrorCode = (errorCode) => {
             return "Error:13, Not Authenticated";
         case "14":
             return "Error:14, Token không hợp lệ";
+        case "15":
+            return "Error:15, Có lỗi khi tạo account và thêm đoàn sinh bằng file excel";
     
         default:
             return "Error: " + errorCode + ", Lỗi không xác định";
